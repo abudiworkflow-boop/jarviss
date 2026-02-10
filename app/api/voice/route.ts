@@ -1,5 +1,6 @@
-import { ElevenLabsClient } from "@elevenlabs/elevenlabs-js";
 import { DEFAULT_CONFIG } from "@/lib/elevenlabs";
+
+export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
   try {
@@ -19,6 +20,7 @@ export async function POST(req: Request) {
       );
     }
 
+    const { ElevenLabsClient } = await import("@elevenlabs/elevenlabs-js");
     const client = new ElevenLabsClient({
       apiKey: process.env.ELEVENLABS_API_KEY,
     });
