@@ -1,4 +1,8 @@
-import type { UIMessage } from "ai";
+export interface Message {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+}
 
 export interface VoiceState {
   isListening: boolean;
@@ -13,8 +17,8 @@ export interface AppState {
   setVoiceState: (partial: Partial<VoiceState>) => void;
 
   // Session
-  sessionMessages: UIMessage[];
-  setSessionMessages: (messages: UIMessage[]) => void;
+  sessionMessages: Message[];
+  setSessionMessages: (messages: Message[]) => void;
 
   // Settings
   autoSpeak: boolean;
@@ -33,10 +37,6 @@ export interface ElevenLabsConfig {
   outputFormat: string;
 }
 
-/** Extract text content from a UIMessage's parts */
-export function getMessageText(message: UIMessage): string {
-  return message.parts
-    .filter((part): part is { type: "text"; text: string } => part.type === "text")
-    .map((part) => part.text)
-    .join("");
+export function getMessageText(message: Message): string {
+  return message.content;
 }

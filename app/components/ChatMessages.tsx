@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import type { UIMessage } from "ai";
+import type { Message } from "@/lib/types";
 import { MessageBubble } from "./MessageBubble";
 import { TypingIndicator } from "./TypingIndicator";
 
 interface ChatMessagesProps {
-  messages: UIMessage[];
+  messages: Message[];
   isActive: boolean;
   onSuggestionClick?: (text: string) => void;
 }

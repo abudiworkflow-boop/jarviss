@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useCallback, useState } from "react";
-import { useChat } from "@ai-sdk/react";
+import { useChat } from "@/lib/hooks/use-chat";
 import { useAppStore } from "@/lib/store";
 import { useVoiceInput } from "@/lib/hooks/use-voice-input";
 import { useVoiceOutput } from "@/lib/hooks/use-voice-output";
@@ -30,7 +30,7 @@ export function ChatInterface() {
     useVoiceInput();
   const { speak, stop: stopSpeaking, isSpeaking } = useVoiceOutput();
 
-  const isActive = status === "submitted" || status === "streaming";
+  const isActive = status === "loading";
   const prevStatusRef = useRef(status);
 
   // Sync messages to Zustand for persistence
@@ -47,9 +47,7 @@ export function ChatInterface() {
 
   // Auto-speak when assistant response completes
   useEffect(() => {
-    const wasActive =
-      prevStatusRef.current === "submitted" ||
-      prevStatusRef.current === "streaming";
+    const wasActive = prevStatusRef.current === "loading";
 
     if (
       wasActive &&
