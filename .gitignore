@@ -1,0 +1,36 @@
+# Environment & Secrets
+.env
+.env.local
+.env*.local
+credentials.json
+token.json
+
+# Temporary files
+.tmp/
+
+# OS files
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# IDE
+.vscode/
+.idea/
+
+# Next.js
+.next/
+out/
+node_modules/
+next-env.d.ts
+*.tsbuildinfo
+
+# PWA generated
+public/sw.js
+public/workbox-*.js
+public/sw.js.map
+public/workbox-*.js.map
+public/swe-worker-*.js

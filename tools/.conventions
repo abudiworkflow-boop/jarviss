@@ -1,0 +1,35 @@
+# Tools Conventions
+
+## Naming
+- Use snake_case: `scrape_single_site.py`, `export_to_sheets.py`
+- Name should describe the action: verb_noun format
+
+## Structure
+- Each script should be standalone and runnable
+- Load env vars from ../.env using python-dotenv
+- Accept inputs via CLI args or stdin
+- Print structured output (JSON preferred) to stdout
+- Exit code 0 = success, non-zero = failure
+
+## Template
+```python
+import os
+import sys
+import json
+from dotenv import load_dotenv
+
+load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
+
+def main():
+    # Your logic here
+    result = {"status": "success", "data": {}}
+    print(json.dumps(result))
+
+if __name__ == "__main__":
+    main()
+```
+
+## Rules
+- Never hardcode credentials — always read from .env
+- Log errors to stderr, results to stdout
+- Keep scripts focused — one tool, one job
