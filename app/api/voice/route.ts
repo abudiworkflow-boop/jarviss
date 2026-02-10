@@ -1,10 +1,6 @@
 import { ElevenLabsClient } from "@elevenlabs/elevenlabs-js";
 import { DEFAULT_CONFIG } from "@/lib/elevenlabs";
 
-const client = new ElevenLabsClient({
-  apiKey: process.env.ELEVENLABS_API_KEY,
-});
-
 export async function POST(req: Request) {
   try {
     const { text } = await req.json();
@@ -22,6 +18,10 @@ export async function POST(req: Request) {
         { status: 500, headers: { "Content-Type": "application/json" } }
       );
     }
+
+    const client = new ElevenLabsClient({
+      apiKey: process.env.ELEVENLABS_API_KEY,
+    });
 
     const voiceId = process.env.ELEVENLABS_VOICE_ID || DEFAULT_CONFIG.voiceId;
 
