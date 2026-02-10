@@ -27,18 +27,21 @@ export function VoiceButton({
       onPointerDown={onStart}
       onPointerUp={onStop}
       onPointerLeave={onStop}
-      className={`relative w-16 h-16 rounded-full flex items-center justify-center transition-all active:scale-95 ${
+      className={`relative flex items-center justify-center transition-all duration-200 active:scale-95 ${
         isListening
-          ? "bg-red-500/20 ring-2 ring-red-500"
-          : "bg-jarvis-surface hover:bg-jarvis-surface-light"
+          ? "w-[72px] h-[72px] rounded-2xl bg-jarvis-error/20 ring-2 ring-jarvis-error glow-red"
+          : "w-[72px] h-[72px] rounded-2xl bg-jarvis-surface/80 border border-white/[0.06] hover:bg-jarvis-surface-light hover:border-jarvis-accent/30"
       }`}
     >
       {isListening && (
-        <span className="absolute inset-0 rounded-full bg-red-500/20 animate-pulse-ring" />
+        <>
+          <span className="absolute inset-0 rounded-2xl bg-jarvis-error/10 animate-pulse-ring" />
+          <span className="absolute inset-[-8px] rounded-3xl border border-jarvis-error/20 animate-pulse-ring" style={{ animationDelay: "0.5s" }} />
+        </>
       )}
       <svg
-        className={`w-7 h-7 relative z-10 ${
-          isListening ? "text-red-500" : "text-jarvis-text-primary"
+        className={`w-7 h-7 relative z-10 transition-colors ${
+          isListening ? "text-jarvis-error" : "text-jarvis-text-primary"
         }`}
         fill="none"
         viewBox="0 0 24 24"

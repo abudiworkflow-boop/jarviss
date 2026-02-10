@@ -20,37 +20,43 @@ export async function POST(req: Request) {
       );
     }
 
-    const { ElevenLabsClient } = await import("@elevenlabs/elevenlabs-js");
-    const client = new ElevenLabsClient({
-      apiKey: process.env.ELEVENLABS_API_KEY,
-    });
-
     const voiceId = process.env.ELEVENLABS_VOICE_ID || DEFAULT_CONFIG.voiceId;
 
-    const audioStream = await client.textToSpeech.convert(voiceId, {
-      text,
-      modelId: DEFAULT_CONFIG.modelId,
-      outputFormat: DEFAULT_CONFIG.outputFormat as "mp3_44100_128",
-    });
-
-    // Convert the async iterable to a ReadableStream
-    const chunks: Uint8Array[] = [];
-    for await (const chunk of audioStream as unknown as AsyncIterable<Uint8Array>) {
-      chunks.push(chunk);
-    }
-    const combined = new Uint8Array(
-      chunks.reduce((acc, c) => acc + c.length, 0)
+    const response = await fetch(
+      `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`,
+      {
+        method: "POST",
+        headers: {
+          "xi-api-key": process.env.ELEVENLABS_API_KEY,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          text,
+          model_id: DEFAULT_CONFIG.modelId,
+          output_format: DEFAULT_CONFIG.outputFormat,
+          voice_settings: {
+            stability: DEFAULT_CONFIG.stability,
+            similarity_boost: DEFAULT_CONFIG.similarityBoost,
+          },
+        }),
+      }
     );
-    let offset = 0;
-    for (const chunk of chunks) {
-      combined.set(chunk, offset);
-      offset += chunk.length;
+
+    if (!response.ok) {
+      const errorBody = await response.text();
+      console.error("ElevenLabs API error:", response.status, errorBody);
+      return new Response(
+        JSON.stringify({ error: "Failed to generate speech" }),
+        { status: 500, headers: { "Content-Type": "application/json" } }
+      );
     }
 
-    return new Response(combined, {
+    const audioBuffer = await response.arrayBuffer();
+
+    return new Response(audioBuffer, {
       headers: {
         "Content-Type": "audio/mpeg",
-        "Transfer-Encoding": "chunked",
+        "Cache-Control": "no-cache",
       },
     });
   } catch (error) {

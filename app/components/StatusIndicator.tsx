@@ -11,28 +11,31 @@ export function StatusIndicator({
   isListening,
   isSpeaking,
 }: StatusIndicatorProps) {
-  let label = "";
-  let dotColor = "";
+  let label = "Online";
+  let dotColor = "bg-jarvis-success";
+  let glowClass = "";
 
   if (isListening) {
     label = "Listening...";
-    dotColor = "bg-red-500";
+    dotColor = "bg-jarvis-error";
+    glowClass = "glow-red";
   } else if (isActive) {
     label = "Thinking...";
     dotColor = "bg-jarvis-accent";
+    glowClass = "glow-blue";
   } else if (isSpeaking) {
     label = "Speaking...";
-    dotColor = "bg-green-500";
+    dotColor = "bg-jarvis-success";
   }
 
-  if (!label) return null;
-
   return (
-    <div className="flex items-center gap-2 animate-fade-in">
+    <div className="flex items-center gap-1.5 animate-fade-in">
       <span
-        className={`w-2 h-2 rounded-full ${dotColor} animate-pulse-ring`}
+        className={`w-1.5 h-1.5 rounded-full ${dotColor} ${glowClass} ${
+          isActive || isListening ? "animate-pulse" : ""
+        }`}
       />
-      <span className="text-xs text-jarvis-text-secondary">{label}</span>
+      <span className="text-[11px] text-jarvis-text-secondary font-medium">{label}</span>
     </div>
   );
 }
