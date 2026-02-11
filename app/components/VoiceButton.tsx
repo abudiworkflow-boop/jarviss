@@ -24,9 +24,7 @@ export function VoiceButton({
   return (
     <button
       type="button"
-      onPointerDown={onStart}
-      onPointerUp={onStop}
-      onPointerLeave={onStop}
+      onClick={isListening ? onStop : onStart}
       className={`relative flex items-center justify-center transition-all duration-200 active:scale-95 ${
         isListening
           ? "w-[72px] h-[72px] rounded-2xl bg-jarvis-error/20 ring-2 ring-jarvis-error glow-red"

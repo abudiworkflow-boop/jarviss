@@ -7,5 +7,5 @@ export const DEFAULT_CONFIG: ElevenLabsConfig = {
   modelId: "eleven_flash_v2_5",
   stability: 0.5,
   similarityBoost: 0.75,
-  outputFormat: "mp3_44100_128",
+  outputFormat: "mp3_22050_32",
 };

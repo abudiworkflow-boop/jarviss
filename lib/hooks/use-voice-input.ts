@@ -57,7 +57,7 @@ export function useVoiceInput() {
         window.SpeechRecognition || window.webkitSpeechRecognition;
       const recognition = new SpeechRecognition();
 
-      recognition.continuous = false;
+      recognition.continuous = true;
       recognition.interimResults = true;
       recognition.lang = "en-US";
 
@@ -68,21 +68,13 @@ export function useVoiceInput() {
       };
 
       recognition.onresult = (event: SpeechRecognitionEvent) => {
-        let finalTranscript = "";
-        let interimTranscript = "";
-
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          const result = event.results[i];
-          if (result.isFinal) {
-            finalTranscript += result[0].transcript;
-          } else {
-            interimTranscript += result[0].transcript;
-          }
+        let full = "";
+        for (let i = 0; i < event.results.length; i++) {
+          full += event.results[i][0].transcript;
         }
 
-        const text = finalTranscript || interimTranscript;
-        setTranscript(text);
-        transcriptRef.current = text;
+        setTranscript(full);
+        transcriptRef.current = full;
       };
 
       recognition.onerror = (event: SpeechRecognitionErrorEvent) => {

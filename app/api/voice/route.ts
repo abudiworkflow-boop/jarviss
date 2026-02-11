@@ -23,7 +23,7 @@ export async function POST(req: Request) {
     const voiceId = process.env.ELEVENLABS_VOICE_ID || DEFAULT_CONFIG.voiceId;
 
     const response = await fetch(
-      `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`,
+      `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}/stream?optimize_streaming_latency=4`,
       {
         method: "POST",
         headers: {
@@ -51,9 +51,8 @@ export async function POST(req: Request) {
       );
     }
 
-    const audioBuffer = await response.arrayBuffer();
-
-    return new Response(audioBuffer, {
+    // Stream audio directly through without buffering on the server
+    return new Response(response.body, {
       headers: {
         "Content-Type": "audio/mpeg",
         "Cache-Control": "no-cache",

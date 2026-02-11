@@ -57,7 +57,7 @@ export function ChatInput({
               onStop={onVoiceStop}
             />
             <span className="text-xs text-jarvis-text-secondary font-medium">
-              {isListening ? "Listening..." : "Hold to speak"}
+              {isListening ? "Listening... tap to stop" : "Tap to speak"}
             </span>
             <button
               type="button"
