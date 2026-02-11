@@ -26,12 +26,14 @@ export function ChatInterface() {
     messages: hasHydrated ? sessionMessages : [],
   });
 
-  const { startListening, stopListening, isListening, transcript, isSupported } =
+  const { startListening, stopListening, isListening, isSupported } =
     useVoiceInput();
   const { speak, stop: stopSpeaking, isSpeaking } = useVoiceOutput();
 
   const isActive = status === "loading";
   const prevStatusRef = useRef(status);
+  const sendMessageRef = useRef(sendMessage);
+  sendMessageRef.current = sendMessage;
 
   // Sync messages to Zustand for persistence
   useEffect(() => {
@@ -80,21 +82,14 @@ export function ChatInterface() {
     stopSpeaking();
     startListening((text: string) => {
       if (text.trim()) {
-        sendMessage({ text });
+        sendMessageRef.current({ text });
       }
     });
-  }, [startListening, stopSpeaking, sendMessage]);
+  }, [startListening, stopSpeaking]);
 
   const handleVoiceStop = useCallback(() => {
     stopListening();
   }, [stopListening]);
-
-  // Submit transcript when voice recognition ends with text
-  useEffect(() => {
-    if (!isListening && transcript.trim()) {
-      sendMessage({ text: transcript });
-    }
-  }, [isListening, transcript, sendMessage]);
 
   const toggleVoiceMode = useCallback(() => {
     setVoiceState({ voiceMode: !voiceState.voiceMode });

@@ -38,6 +38,7 @@ export function useVoiceInput() {
   const [isSupported, setIsSupported] = useState(false);
   const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
   const onResultRef = useRef<((text: string) => void) | null>(null);
+  const transcriptRef = useRef("");
 
   useEffect(() => {
     const supported =
@@ -63,6 +64,7 @@ export function useVoiceInput() {
       recognition.onstart = () => {
         setIsListening(true);
         setTranscript("");
+        transcriptRef.current = "";
       };
 
       recognition.onresult = (event: SpeechRecognitionEvent) => {
@@ -78,20 +80,23 @@ export function useVoiceInput() {
           }
         }
 
-        setTranscript(finalTranscript || interimTranscript);
+        const text = finalTranscript || interimTranscript;
+        setTranscript(text);
+        transcriptRef.current = text;
       };
 
       recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
         console.error("Speech recognition error:", event.error);
         setIsListening(false);
         setTranscript("");
+        transcriptRef.current = "";
       };
 
       recognition.onend = () => {
         setIsListening(false);
-        // Submit the final transcript
-        if (onResultRef.current && transcript) {
-          onResultRef.current(transcript);
+        const finalText = transcriptRef.current;
+        if (onResultRef.current && finalText) {
+          onResultRef.current(finalText);
         }
       };
 
@@ -104,7 +109,7 @@ export function useVoiceInput() {
         setIsListening(false);
       }
     },
-    [isSupported, transcript]
+    [isSupported]
   );
 
   const stopListening = useCallback(() => {
